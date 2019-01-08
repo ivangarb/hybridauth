@@ -61,9 +61,6 @@ class Hybrid_Providers_Google extends Hybrid_Provider_Model_OAuth2 {
     if (isset($this->config['force']) && $this->config['force'] === true) {
       $parameters['approval_prompt'] = 'force';
     }
-
-    $this->getUserProfile();
-
     Hybrid_Auth::redirect($this->api->authorizeUrl($parameters));
   }
 
@@ -89,8 +86,7 @@ class Hybrid_Providers_Google extends Hybrid_Provider_Model_OAuth2 {
     $this->user->profile->gender = (property_exists($response, 'gender')) ? $response->gender : "";
     $this->user->profile->language = (property_exists($response, 'locale')) ? $response->locale : "";
     $this->user->profile->email = (property_exists($response, 'email')) ? $response->email : "";
-    $this->user->profile->emailVerified = (property_exists($response, 'email_verified') && ($response->email_verified === true || $response->email_verified === 1)) ? $response->email : "";
-
+    $this->user->profile->emailVerified = (property_exists($response, 'email_verified')) ? ($response->email_verified === true || $response->email_verified === 1 ? $response->email : "") : "";
     return $this->user->profile;
   }
 
